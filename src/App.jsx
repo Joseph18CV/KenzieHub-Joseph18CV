@@ -17,7 +17,7 @@ function App() {
   function userLogout() {
     setUser(null)
     localStorage.removeItem("@TOKEN")
-    localStorage.removeItem("@USER")
+    localStorage.removeItem("@USERID")
     navigate("/")
   }
 

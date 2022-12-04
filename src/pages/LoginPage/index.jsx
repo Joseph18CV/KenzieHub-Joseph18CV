@@ -26,7 +26,7 @@ function LoginPage ({setUser}) {
             toast.success("Logado com sucesso!")
             window.localStorage.clear()
             window.localStorage.setItem("@TOKEN", response.data.token)
-            window.localStorage.setItem("@USER", JSON.stringify(response.data.user))
+            window.localStorage.setItem("@USERID", response.data.user.id)
             setTimeout(function() {
                 reset()
                 (navigate("/home"))

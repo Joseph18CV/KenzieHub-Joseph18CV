@@ -1,4 +1,4 @@
-import { StyledInput } from "./styleInput"
+import { StyledInput } from "./styleInput";
 
 function Input ({id, label, type, register, placeholder, name}) {
     return (

@@ -1,4 +1,4 @@
-import { StyledButton } from "./styleButton"
+import { StyledButton } from "./styleButton";
 
 function Button ({type, value}) {
     return (

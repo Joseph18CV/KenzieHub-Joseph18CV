@@ -3,42 +3,32 @@ import { Input } from "../../components/Input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { LoginSchema } from "./LoginSchema";
-import { useState } from "react";
-import { api } from "../../services/api";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { StyledLogin } from "./styleLogin";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
+import { useAuth } from "../../contexts/UserContext/UserContenxt";
+import { useEffect, useState } from "react";
 
-function LoginPage ({setUser}) {
+function LoginPage () {
 
+    const {login, loading} = useAuth()
     const navigate = useNavigate()
-    const [loading, setLoading] = useState(false)
+    const [loadingNavigate, setLoadingNavigate] = useState(true)
 
-    const { register, handleSubmit, formState:{errors}, reset } = useForm({
+    const { register, handleSubmit, formState:{errors} } = useForm({
         resolver: yupResolver(LoginSchema)
     })
 
-    async function submitLogin (data) {
-        try {
-            const response = await api.post("sessions", data)
-            setLoading(true)
-            toast.success("Logado com sucesso!")
-            window.localStorage.clear()
-            window.localStorage.setItem("@TOKEN", response.data.token)
-            window.localStorage.setItem("@USERID", response.data.user.id)
-            setTimeout(function() {
-                reset()
-                (navigate("/home"))
-            }, 6000)
-            setUser(response.data)
-        } catch (error) {
-            reset()
-            toast.error("Ops! Algo deu errado")
-            console.error(error)
-        } finally {
-            setLoading(false)
+    useEffect(() => {
+        const token = localStorage.getItem("@TOKEN")
+
+        if(token) {
+            navigate("/dashboard", {replace: true})
         }
+        setLoadingNavigate(false)
+    }, [navigate])
+
+    if(loadingNavigate) {
+        return null
     }
 
     return (
@@ -47,7 +37,7 @@ function LoginPage ({setUser}) {
                 <div className="logo">
                     <h1>Kenzie Hub</h1>
                 </div>
-                <form noValidate autoComplete="off" onSubmit={handleSubmit(submitLogin)}>
+                <form noValidate autoComplete="off" onSubmit={handleSubmit(login)}>
                     <h3>Login</h3>
                     <Input type="email" id="email" label="Email" placeholder="Digite aqui seu email" register={register} name={"email"}/>
                     {errors.email?.message && <p>{errors.email.message}</p>}

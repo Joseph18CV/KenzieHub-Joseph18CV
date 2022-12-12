@@ -1,21 +1,16 @@
-import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../../contexts/UserContext/UserContenxt";
 
 function ProtectedRoutes () {
-    const navigate = useNavigate()
 
-    useEffect(() => {
-        if(!localStorage.getItem("@TOKEN")){
-            navigate("/")
-        }else {
-            
-        }
-    }, [])
-    return (
-        <>
-            <Outlet/>
-        </>
-    )
+    const {user, loading} = useAuth()
+    const location = useLocation()
+
+    if(loading) {
+        return null;
+    }
+
+    return user ? <Outlet/> : <Navigate to="/" state={{from: location}}/>
 }
 
 export {

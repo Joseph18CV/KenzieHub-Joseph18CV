@@ -1,35 +1,24 @@
 import './App.css';
-import { GlobalStyle } from './styles/GlobalStyle';
-import { useState } from "react";
+import { GlobalStyle } from './styles/GlobalStyle'; 
 import { RegisterPage } from './pages/RegisterPage';
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { LoginPage } from './pages/LoginPage';
 import { PageNotFound } from './pages/PageNotFound';
-import { HomePage } from './pages/HomePage';
+import { DashboardPage } from './pages/DashboardPage';
 import { ProtectedRoutes } from './components/ProtectedRoutes';
 import { ToastContainer } from "react-toastify";
 
 function App() {
 
-  const navigate = useNavigate()
-  const [user, setUser] = useState(null)
-
-  function userLogout() {
-    setUser(null)
-    localStorage.removeItem("@TOKEN")
-    localStorage.removeItem("@USERID")
-    navigate("/")
-  }
-
   return (
     <div className="App">
       <GlobalStyle/>
       <Routes>
-        <Route path="/" element={<LoginPage setUser={setUser}/>}/>
+        <Route path="/" element={<LoginPage />}/>
         <Route path="/register" element={<RegisterPage/>}/>
         <Route path="*" element={<PageNotFound/>}/>
-        <Route path="/home" element={<ProtectedRoutes/>}>
-          <Route index element={<HomePage userLogout={userLogout}/>}/>
+        <Route path="/dashboard" element={<ProtectedRoutes/>}>
+          <Route index element={<DashboardPage/>}/>
         </Route>
       </Routes>
       <ToastContainer/>

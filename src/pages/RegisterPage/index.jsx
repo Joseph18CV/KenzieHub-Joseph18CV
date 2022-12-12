@@ -4,39 +4,17 @@ import { useForm } from "react-hook-form";
 import { StyledRegister } from "./styleRegister";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RegisterSchema } from "./RegisterSchema";
-import { useState } from "react";
-import { api } from "../../services/api";
-import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.min.css";
+import { useAuth } from "../../contexts/UserContext/UserContenxt";
 
 function RegisterPage () {
 
-    const navigate = useNavigate()
-    const [loading, setLoading] = useState(false)
+    const {registerSubmit, loading} = useAuth()
 
-    const { register, handleSubmit, formState:{errors}, reset } = useForm({
+    const { register, handleSubmit, formState:{errors} } = useForm({
         resolver: yupResolver(RegisterSchema)
     })
-
-    async function submitRegister (data) {
-        try {
-            const response = await api.post("users", data)
-            setLoading(true)
-            toast.success("Conta criada com sucesso!")
-            setTimeout(function() {
-                reset()
-                (navigate("/"))
-            }, 6000)
-            return response.data
-        } catch (error) {
-            toast.error("Ops! Algo deu errado")
-            console.error(error)
-            setLoading(false)
-        } finally {
-            setLoading(false)
-        }
-    }
 
     return (
         <StyledRegister>
@@ -45,7 +23,7 @@ function RegisterPage () {
                     <h1>Kenzie Hub</h1>
                     <Link to="/">Voltar</Link>
                 </div>
-                <form noValidate autoComplete="off" onSubmit={handleSubmit(submitRegister)}>
+                <form noValidate autoComplete="off" onSubmit={handleSubmit(registerSubmit)}>
                     <h3>Crie sua conta</h3>
                     <span>Rápido e grátis, vamos nessa</span>
                     <Input type="text" id="name" label="Nome" placeholder="Digite aqui seu nome" register={register} name={"name"}/>
